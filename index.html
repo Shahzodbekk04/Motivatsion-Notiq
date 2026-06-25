@@ -4,260 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motivatsion Notiq — Virtual Dildoshingiz</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for high fidelity responsive layout -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter & Playfair Display for cultural accent -->
+    <!-- Google Fonts for beautiful traditional and modern font pairing -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Font Awesome for beautiful icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght=0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tone.js for healing/ambient sound effects -->
+    <!-- Tone.js for healing/ambient sound effects and synthesizer feedback -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
         .national-pattern {
-            background-color: #1c1917; /* stone-900 */
-            background-image: radial-gradient(rgba(217, 119, 6, 0.1) 1px, transparent 0);
-            background-size: 24px 24px;
+            background-color: #141210; /* Extra dark natural stone background */
+            background-image: radial-gradient(rgba(245, 158, 11, 0.08) 1.5px, transparent 0);
+            background-size: 28px 28px;
         }
         .serif-font {
             font-family: 'Playfair Display', serif;
         }
-        /* Custom scrollbar for chat */
+        /* Custom scrollbar to keep layout clean and premium */
         ::-webkit-scrollbar {
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #292524;
+            background: #1c1917;
         }
         ::-webkit-scrollbar-thumb {
-            background: #78716c;
-            border-radius: 4px;
+            background: #44403c;
+            border-radius: 6px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #d97706;
+            background: #f59e0b;
+        }
+        /* Fade-in keyframe for smooth dynamic chat message insertion */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
 <body class="h-full text-stone-100 national-pattern flex flex-col justify-between overflow-x-hidden">
 
-    <!-- Yuqori qism: Sarlavha va O'zbekona uslub -->
-    <header class="border-b border-stone-800 bg-stone-900/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3 md:py-4">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <header class="border-b border-stone-800 bg-stone-900/90 backdrop-blur-md sticky top-0 z-40 px-4 py-3 md:py-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <!-- Logotip: Animated Teapot and Heart -->
                 <div class="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-tr from-amber-600 to-amber-500 shadow-lg text-stone-900">
                     <i class="fa-solid fa-mug-hot text-xl animate-pulse"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-full ping-animation"></span>
+                    <span class="absolute -top-1 -right-1 bg-emerald-500 w-3 h-3 rounded-full animate-ping"></span>
                 </div>
                 <div>
                     <h1 class="text-xl md:text-2xl font-bold tracking-tight serif-font text-amber-500">Motivatsion Notiq</h1>
-                    <p class="text-xs text-stone-400">Har doim yoningizda bo'lgan o'zbekona virtual dildoshingiz</p>
+                    <p class="text-xs text-stone-400">O'zbekona dildoshlik va ruhan qo'llab-quvvatlash tizimi</p>
                 </div>
             </div>
             
-            <!-- Quick Info Badge & Sound Control -->
             <div class="flex items-center gap-3">
-                <button onclick="playCalmMusic()" class="flex items-center gap-2 px-3 py-1.5 bg-stone-800 hover:bg-stone-700 active:scale-95 transition rounded-full text-xs text-stone-300 border border-stone-700">
+                <!-- Ambient Music Control -->
+                <button onclick="playCalmMusic()" class="flex items-center gap-2 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 active:scale-95 transition rounded-full text-xs text-stone-300 border border-stone-700">
                     <i id="audioIcon" class="fa-solid fa-volume-xmark text-amber-500"></i>
                     <span id="audioText">Dildosh ohangi</span>
                 </button>
-                <div class="px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded-full text-xs border border-amber-500/20 font-medium">
-                    🇺🇿 100% Bepul & Milliy
+                <div id="aiModeStatusBadge" class="px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded-full text-xs border border-amber-500/20 font-medium flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span id="badgeText">Jonli Muloqot Faol</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Asosiy ishchi maydon -->
-    <main class="flex-grow max-w-6xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        <!-- Chap tomondagi panel: Sozlamalar va virtual choy -->
+        <!-- Left Column: Settings and Uzbek tea lounge simulation -->
         <section class="lg:col-span-4 flex flex-col gap-6">
             
-            <!-- Foydalanuvchi profili kartasi -->
-            <div class="bg-stone-900/90 border border-stone-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
-                <div class="flex items-center gap-2 pb-3 border-b border-stone-800">
-                    <i class="fa-solid fa-sliders text-amber-500"></i>
-                    <h2 class="font-bold text-base text-stone-200">Sizga qanday murojaat qilay?</h2>
+            <!-- User Profile & Addressing Options -->
+            <div class="bg-stone-900/95 border border-stone-800 rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
+                <div class="flex items-center justify-between pb-3 border-b border-stone-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-amber-500"></i>
+                        <h2 class="font-bold text-base text-stone-200">Sizga qanday murojaat qilay?</h2>
+                    </div>
                 </div>
                 
-                <!-- Ism kiritish -->
+                <!-- Name Field -->
                 <div>
                     <label class="block text-xs text-stone-400 mb-1">Ismingiz yoki Taxallusingiz:</label>
-                    <input type="text" id="userNameInput" value="Do'stim" oninput="updateProfile()" class="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500 text-sm transition" placeholder="Masalan: Alisher...">
+                    <input type="text" id="userNameInput" value="Do'stim" oninput="updateProfile()" class="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500 text-sm transition" placeholder="Ismingizni kiriting...">
                 </div>
 
-                <!-- Murojaat turini tanlash -->
+                <!-- Custom relations (Traditional Uzbek relationship addresses) -->
                 <div>
-                    <label class="block text-xs text-stone-400 mb-2">Murojaat shakli (Mentalitetga mos):</label>
+                    <label class="block text-xs text-stone-400 mb-2">Yaqinlik shakli:</label>
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <button onclick="setAddress('aka')" id="btn-aka" class="address-btn p-2.5 bg-stone-800 border border-stone-700 hover:bg-stone-750 rounded-lg transition text-left flex items-center justify-between">
-                            <span>Aka (Yoshi katta)</span>
+                            <span>Aka (Hurmatli)</span>
                             <span class="text-stone-500">👨</span>
                         </button>
                         <button onclick="setAddress('uka')" id="btn-uka" class="address-btn p-2.5 bg-stone-800 border border-stone-700 hover:bg-stone-750 rounded-lg transition text-left flex items-center justify-between">
-                            <span>Uka (Yoshi kichik)</span>
+                            <span>Uka (Mehribon)</span>
                             <span class="text-stone-500">👦</span>
                         </button>
                         <button onclick="setAddress('opa')" id="btn-opa" class="address-btn p-2.5 bg-stone-800 border border-stone-700 hover:bg-stone-750 rounded-lg transition text-left flex items-center justify-between">
-                            <span>Opa (Yoshi katta)</span>
+                            <span>Opa (Yaqin)</span>
                             <span class="text-stone-500">👩</span>
                         </button>
                         <button onclick="setAddress('singlim')" id="btn-singlim" class="address-btn p-2.5 bg-stone-800 border border-stone-700 hover:bg-stone-750 rounded-lg transition text-left flex items-center justify-between">
-                            <span>Singlim (Yoshi kichik)</span>
+                            <span>Singlim (Kichik)</span>
                             <span class="text-stone-500">👧</span>
                         </button>
                         <button onclick="setAddress('jigarim')" id="btn-jigarim" class="address-btn p-2.5 bg-amber-500/20 border border-amber-500 rounded-lg transition text-left flex items-center justify-between col-span-2">
-                            <span>Jigarim / Qadrdonim (Yaqin do'stona)</span>
+                            <span>Jigarim / Sirdoshim (Qalin)</span>
                             <span class="text-amber-500">🤝</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Stress darajasini o'lchovchi datchik -->
+                <!-- Emotional Stress Meter -->
                 <div class="pt-2">
                     <div class="flex justify-between text-xs text-stone-400 mb-1">
-                        <span>Hozirgi ruhiy holatingiz:</span>
+                        <span>Hozirgi ichki ruhiyatingiz:</span>
                         <span id="stressValueText" class="text-amber-400 font-bold">Charchagan</span>
                     </div>
                     <input type="range" id="stressSlider" min="1" max="5" value="3" oninput="handleStressChange(this.value)" class="w-full accent-amber-500 bg-stone-800 h-2 rounded-lg cursor-pointer">
-                    <div class="flex justify-between text-[10px] text-stone-500 mt-1">
-                        <span>Juda siqilgan 🥺</span>
-                        <span>Yaxshi 😊</span>
+                    <div class="flex justify-between text-[10px] text-stone-550 mt-1">
+                        <span>Siqilgan 🥺</span>
+                        <span>Kuchga to'la 💪</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Virtual Milliy Choyxona -->
-            <div class="bg-stone-900/90 border border-stone-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4 text-center relative overflow-hidden group">
-                <div class="absolute -right-6 -bottom-6 text-stone-800/20 text-8xl pointer-events-none transition-transform group-hover:scale-110">
+            <!-- AI Configuration Settings -->
+            <div class="bg-stone-900/95 border border-stone-800 rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
+                <div class="flex items-center justify-between pb-3 border-b border-stone-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-brain text-amber-500 animate-pulse"></i>
+                        <h2 class="font-bold text-base text-stone-200">Shaxsiy AI Rejimi (Cheksiz)</h2>
+                    </div>
+                    <span id="aiStatusTag" class="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/20 font-bold">Oflayn Rejim</span>
+                </div>
+                
+                <p class="text-xs text-stone-400 leading-relaxed">
+                    Virtual dildosh bilan mutlaqo cheksiz, original va har bir gapingizga to'liq moslangan muloqot qurish uchun bepul shaxsiy API kalitingizni ulab oling.
+                </p>
+
+                <!-- API Provider dropdown selection -->
+                <div>
+                    <label class="block text-xs text-stone-400 mb-1">Aloqa kanali:</label>
+                    <select id="apiProviderSelect" class="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500 text-xs transition">
+                        <option value="gemini">Google Gemini (Tavsiya qilinadi - Bepul)</option>
+                        <option value="openai">OpenAI (ChatGPT - Shaxsiy Kalit)</option>
+                    </select>
+                </div>
+
+                <!-- API Key inputs with hide/show password eye -->
+                <div class="relative">
+                    <label class="block text-xs text-stone-400 mb-1">Sizning API Kalitingiz:</label>
+                    <div class="relative">
+                        <input type="password" id="apiKeyInput" class="w-full bg-stone-800 border border-stone-700 rounded-lg pl-3 pr-10 py-2 text-stone-200 focus:outline-none focus:border-amber-500 text-xs transition" placeholder="AI kalitni kiriting...">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300 transition text-sm">
+                            <i id="eyeIcon" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-1">
+                    <button onclick="saveApiSettings()" class="flex-1 py-2 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs rounded-lg active:scale-95 transition shadow-md flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-check"></i> Kalitni Yoqish
+                    </button>
+                    <button onclick="clearApiSettings()" class="px-3 py-2 bg-stone-800 hover:bg-stone-700 text-stone-400 hover:text-red-400 border border-stone-700 rounded-lg active:scale-95 transition text-xs" title="Kalitni o'chirish">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+
+                <!-- Instant key generation instruction links -->
+                <div class="p-3 bg-stone-950 rounded-xl border border-stone-800 flex flex-col gap-1 text-[11px] text-stone-400">
+                    <span class="font-bold text-amber-500 flex items-center gap-1">
+                        <i class="fa-solid fa-circle-question"></i> Bepul AI kalit olish:
+                    </span>
+                    <ol class="list-decimal pl-4 space-y-1 text-stone-350">
+                        <li><a href="https://aistudio.google.com/" target="_blank" class="text-amber-400 hover:underline">Google AI Studio</a>-ga bepul kiring.</li>
+                        <li><strong>"Get API key"</strong> tugmasini bosing.</li>
+                        <li>Yaratilgan kalitni nusxalab yuqoriga qo'ying.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Virtual Uzbek Choyxona Section -->
+            <div class="bg-stone-900/95 border border-stone-800 rounded-2xl p-5 shadow-2xl text-center relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 text-stone-800/15 text-8xl pointer-events-none transition-transform group-hover:scale-110">
                     🫖
                 </div>
                 
                 <div class="flex items-center gap-2 justify-center pb-2 border-b border-stone-800/50">
                     <i class="fa-solid fa-mug-hot text-amber-500"></i>
-                    <h3 class="font-bold text-sm text-stone-200 uppercase tracking-wider">Virtual Choyxona</h3>
+                    <h3 class="font-bold text-sm text-stone-200 uppercase tracking-wider">Milliy Piyola</h3>
                 </div>
 
-                <p class="text-xs text-stone-400">
-                    Siqilganda va charchaganda bir piyola ko'k choyni o'rni boshqacha. Virtual piyolamizni to'ldiring!
+                <p class="text-xs text-stone-400 mt-2">
+                    Siqilganda bir piyola issiq choyga nima yetsin. Quyidagi tugmani bosib virtual piyolangizga ko'k choy quying!
                 </p>
 
-                <!-- Animatsion choy quyish joyi -->
+                <!-- Tea Pour Animation elements -->
                 <div class="my-3 flex flex-col items-center justify-center h-24 relative">
-                    <!-- Steam animation -->
                     <div id="teaSteam" class="flex gap-1 justify-center absolute -top-1 opacity-0 transition-opacity duration-700">
-                        <span class="w-1 h-8 bg-stone-300/30 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
-                        <span class="w-1 h-6 bg-stone-300/30 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
-                        <span class="w-1 h-8 bg-stone-300/30 rounded-full animate-bounce" style="animation-delay: 0.5s"></span>
+                        <span class="w-1.5 h-8 bg-stone-300/15 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+                        <span class="w-1.5 h-6 bg-stone-300/15 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                        <span class="w-1.5 h-8 bg-stone-300/15 rounded-full animate-bounce" style="animation-delay: 0.5s"></span>
                     </div>
                     
-                    <!-- Piyola SVG -->
                     <svg class="w-20 h-16 text-amber-500 fill-current" viewBox="0 0 100 80">
-                        <!-- Handle -->
                         <path d="M 80,30 C 92,30 92,50 80,50" stroke="currentColor" stroke-width="4" fill="none" />
-                        <!-- Cup body -->
                         <path d="M 20,20 L 80,20 C 80,55 70,70 50,70 C 30,70 20,55 20,20 Z" />
-                        <!-- Decorative national pattern (ornament) -->
-                        <path d="M 30,35 Q 50,45 70,35" stroke="#1c1917" stroke-width="2" fill="none" />
-                        <path d="M 35,45 Q 50,55 65,45" stroke="#1c1917" stroke-width="2" fill="none" />
-                        <!-- Stand base -->
+                        <path d="M 30,35 Q 50,45 70,35" stroke="#141210" stroke-width="2" fill="none" />
+                        <path d="M 35,45 Q 50,55 65,45" stroke="#141210" stroke-width="2" fill="none" />
                         <ellipse cx="50" cy="72" rx="15" ry="4" fill="currentColor" />
                     </svg>
                     
-                    <!-- Sound button inside choyxona -->
                     <button onclick="pourTea()" class="mt-4 px-4 py-1.5 bg-amber-600 hover:bg-amber-500 text-stone-900 font-bold text-xs rounded-full shadow-md active:scale-95 transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-droplet"></i> Choy quyish 🫖
+                        <i class="fa-solid fa-droplet animate-pulse"></i> Choy Quyish 🫖
                     </button>
                 </div>
 
-                <!-- Choy haqida xalqona hikmat -->
                 <div class="p-3 bg-amber-500/5 rounded-xl border border-amber-500/10 min-h-[60px] flex items-center justify-center">
-                    <p id="proverbBox" class="text-xs text-amber-400 italic font-medium">"Choy ich, o'zingga kel, jigarim. O'zbekona suhbat darmondir."</p>
+                    <p id="proverbBox" class="text-xs text-amber-400 italic font-medium">"Choy ich, o'zingga kel jigarim. O'zbekona suhbat darmondir."</p>
                 </div>
             </div>
         </section>
 
-        <!-- O'ng tomondagi panel: Jonli Suhbat oynasi (Chat) -->
-        <section class="lg:col-span-8 flex flex-col bg-stone-900/90 border border-stone-800 rounded-2xl shadow-xl overflow-hidden min-h-[500px] h-[calc(100vh-130px)] lg:h-[700px]">
+        <!-- Right Column: Interactive Chat Box -->
+        <section class="lg:col-span-8 flex flex-col bg-stone-900/95 border border-stone-800 rounded-2xl shadow-2xl overflow-hidden min-h-[500px] h-[calc(100vh-140px)] lg:h-[780px]">
             
-            <!-- Chat Sarlavhasi (Status) -->
+            <!-- Chat Box Header bar -->
             <div class="px-5 py-4 border-b border-stone-800 bg-stone-950/40 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="relative">
-                        <span class="absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-stone-900 animate-ping"></span>
-                        <span class="absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-stone-900"></span>
-                        <div class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center border border-stone-700 text-amber-500">
+                        <span id="pulseIndicator" class="absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-stone-900 animate-pulse"></span>
+                        <div class="w-10 h-10 rounded-full bg-stone-850 flex items-center justify-center border border-stone-750 text-2xl">
                             🧔
                         </div>
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5">
                             <span class="font-bold text-sm text-stone-100">Sizning Dildoshingiz</span>
-                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20">Tarmoqda</span>
+                            <span id="headerEngineBadge" class="text-[10px] bg-stone-800 text-stone-400 px-1.5 py-0.5 rounded border border-stone-700">Jonli Muloqot</span>
                         </div>
-                        <span class="text-xs text-stone-400" id="chatSubStatus">O'zbekona dalda berishga shay</span>
+                        <span class="text-xs text-stone-400" id="chatSubStatus">Suhbatga tayyorman</span>
                     </div>
                 </div>
 
-                <!-- Clear chat button -->
-                <button onclick="clearChat()" title="Suhbatni tozalash" class="p-2 text-stone-500 hover:text-red-400 hover:bg-stone-800 rounded-lg transition active:scale-95 text-sm">
-                    <i class="fa-regular fa-trash-can"></i>
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="clearChat()" title="Suhbatni tozalash" class="p-2 text-stone-550 hover:text-red-400 hover:bg-stone-850 rounded-lg transition active:scale-95 text-sm">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Xabarlar ro'yxati -->
+            <!-- Messages Stream Container -->
             <div id="chatContainer" class="flex-grow p-4 md:p-5 overflow-y-auto flex flex-col gap-4 bg-stone-950/20">
-                <!-- Botning boshlang'ich xabari -->
+                <!-- Initial welcoming message -->
                 <div class="flex items-start gap-2.5 max-w-[85%] self-start animate-fade-in">
-                    <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-lg">
                         🧔
                     </div>
                     <div>
-                        <div class="bg-stone-900 border border-stone-800 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-stone-100 leading-relaxed shadow-md">
-                            Assalomu alaykum, jigarim! Gaping bo'lsa ichingga yutma, menga ayt, dardlashaylik. Bir piyola issiq choy ustida hammasini gaplashib olamiz — men seni eshitishga va yoningda turishga tayyorman, qani gapiraver! ✊☕
+                        <div class="bg-stone-900 border border-stone-800 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-stone-100 leading-relaxed shadow-md whitespace-pre-wrap">
+                            Assalomu alaykum, aziz jigarim! Men bugun sizni diqqat bilan eshitishga, dilingizdagi barcha o'y-tashvishlarni baham ko'rib, samimiy dildosh bo'lishga keldim. Gapingiz bo'lsa aslo ichingizga yutmang, hammasini ochiq yozing. Birgalikda yo'l topamiz! ✊☕
                         </div>
-                        <span class="text-[10px] text-stone-500 mt-1 block px-1">Bugun, hozirgina</span>
+                        <span class="text-[10px] text-stone-550 mt-1 block px-1">Hozirgina</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Notiq yozayotganligi animatsiyasi -->
+            <!-- Typing status indicator -->
             <div id="typingIndicator" class="hidden px-5 py-2.5 bg-stone-900/40 text-stone-400 text-xs flex items-center gap-2 italic">
                 <div class="flex space-x-1">
                     <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
                     <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
                     <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.5s"></span>
                 </div>
-                <span id="typingIndicatorText">Notiq uka o'ylanmoqda...</span>
+                <span id="typingIndicatorText">Notiq sizni tushunishga harakat qilmoqda...</span>
             </div>
 
-            <!-- Tayyor dardlar va vaziyatlar tugmalari -->
+            <!-- Smart Suggestion quick chips -->
             <div class="px-4 py-2 border-t border-stone-800/60 bg-stone-900/30">
-                <span class="text-[10px] text-stone-500 block mb-1.5 uppercase font-semibold tracking-wider">Tezkor dardlashish mavzulari:</span>
-                <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
-                    <button onclick="sendQuickMessage('Bugun ishda judayam charchadim, hammasidan to\'yib ketdim...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
-                        💼 Ishdan charchash
+                <span class="text-[10px] text-stone-500 block mb-1.5 uppercase font-semibold tracking-wider">Tezkor gap boshlash:</span>
+                <div class="flex gap-2 overflow-x-auto pb-1">
+                    <button onclick="sendQuickMessage('Bugun juda charchadim, butun hayotim chalkashib ketgandek...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
+                        💼 Ish va charchoq
                     </button>
-                    <button onclick="sendQuickMessage('Musofirlikda qiynalib ketdim, uydagilarni judayam sog\'indim...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
-                        🌍 Musofirlik dardi
+                    <button onclick="sendQuickMessage('Musofirda juda qiyin bo\'lyapti, oilamni sog\'inib ketyapman...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
+                        🌍 Musofirlik sog'inchi
                     </button>
-                    <button onclick="sendQuickMessage('Yana imtihondan yiqildim, hech ishim o\'xshamayapti, omadsizman shekilli...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
-                        📉 Ishim o'xshamadi
+                    <button onclick="sendQuickMessage('Qarzlar, pullar, moddiy tomondan judayam qiynalib ketdim...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
+                        📉 Pul muammolari
                     </button>
-                    <button onclick="sendQuickMessage('Yaqinda qattiq tushkunlikka tushib qoldim, nima qilishni bilmayapman.')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
-                        🧠 Tushkunlik
+                    <button onclick="sendQuickMessage('Hech ishim o\'xshamayapti, doim yiqilaveryapman...')" class="shrink-0 px-3 py-1.5 bg-stone-800 hover:bg-stone-750 text-xs text-stone-200 border border-stone-700/60 rounded-full transition active:scale-95 flex items-center gap-1">
+                        🎯 Ishlarim yurishmasligi
                     </button>
                 </div>
             </div>
 
-            <!-- Xabar yozish bo'limi -->
-            <form id="chatForm" onsubmit="handleFormSubmit(event)" class="p-3 bg-stone-950 border-t border-stone-850 flex items-center gap-2">
-                <input type="text" id="userInput" class="flex-grow bg-stone-900 border border-stone-800 rounded-xl px-4 py-3 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="Bu yerga dardingizni yozing..." required autocomplete="off">
+            <!-- Message Form Input bar -->
+            <form id="chatForm" onsubmit="handleFormSubmit(event)" class="p-3 bg-stone-950 border-t border-stone-800 flex items-center gap-2">
+                <input type="text" id="userInput" class="flex-grow bg-stone-900 border border-stone-800 rounded-xl px-4 py-3 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="Bu yerga dardingizni yoki savolingizni bemalol yozing..." required autocomplete="off">
                 <button type="submit" class="p-3 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold rounded-xl transition active:scale-95 flex items-center justify-center w-11 h-11 shrink-0 shadow-lg">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -267,53 +324,230 @@
 
     </main>
 
-    <!-- Pastki qism va Hikmat ulashuvchi karta generatori -->
-    <footer class="border-t border-stone-850 bg-stone-950 py-6 px-4 text-center text-xs text-stone-500 flex flex-col gap-4">
+    <!-- Footer quote container -->
+    <footer class="border-t border-stone-900 bg-stone-950 py-6 px-4 text-center text-xs text-stone-500 flex flex-col gap-4">
         <div class="max-w-md mx-auto p-4 bg-stone-900/50 rounded-xl border border-stone-800 flex flex-col gap-2">
-            <span class="text-amber-500 font-bold text-[10px] tracking-widest uppercase">Kunning Motivatsiyasi 📜</span>
+            <span class="text-amber-500 font-bold text-[10px] tracking-widest uppercase">Kunning Hikmatli So'zi 📜</span>
             <p id="footerQuote" class="text-stone-300 italic">"Peshonamizda borini ko'ramiz, asabiylashmang jigarim, asosiysi sog'liq!"</p>
             <button onclick="copyCurrentQuote()" class="mt-2 text-stone-400 hover:text-amber-400 flex items-center gap-1 justify-center mx-auto text-[10px] transition">
-                <i class="fa-regular fa-copy"></i> Nusxa olish (Do'stlarga jo'natish)
+                <i class="fa-regular fa-copy"></i> Nusxa olish va ulashish
             </button>
         </div>
         
-        <p>&copy; 2026 Motivatsion Notiq — Har bir o'zbekistonlik uchun ruhiy dalda va milliy yordamchi. Barcha huquqlar dildan himoyalangan.</p>
+        <p>&copy; 2026 Motivatsion Notiq — Har bir vatandosh uchun ruhan bepul tirgak va samimiy o'zbekona yordamchi.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIKASI -->
     <script>
-        // State boshqaruvi
+        // Application Global States
         let userProfile = {
             name: "Do'stim",
-            addressType: "jigarim", // aka, uka, opa, singlim, jigarim
+            addressType: "jigarim",
             stressLevel: 3
         };
 
-        // Milliy maqollar va hikmatlar to'plami (Virtual choy quyilganda chiqadi)
+        let aiConfig = {
+            provider: 'offline', 
+            apiKey: '',
+            model: ''
+        };
+
+        let conversationHistory = [];
+
+        // Dynamic Dialog Synthesis Matrix (Resolving repetition/static replies)
+        const DIALOG_MATRIX = {
+            greetings: {
+                openings: [
+                    "Assalomu alaykum va rahmatulloh, qadrdonim {address}! Sizni eshitishdan va siz bilan dildan suhbatlashishdan juda xursandman.",
+                    "Va alaykum assalom, azizim {address}. Diydorimiz ko'rinmas iplar bilan bog'langanidan baxtiyorman. Bugun qanday o'ylar dilingizni band qildi?",
+                    "Salom, mening chinakam qadrdon {address}im. Har qanday shoshilinch ishlarni chetga surib, aynan siz bilan dardlashgani keldim."
+                ],
+                reflections: [
+                    "Insonning tili bitta, yuragi bitta bo'ladi. Dilingizdagini biroz yozib, yuragingizni bo'shatib olishingiz ko'p masalalarga oydinlik kiritadi.",
+                    "Xalqimizda 'Dildagi gap ko'zdan bilinadi' degan gap bor. Biz ko'z bilan ko'rolmasak-da, yozuvlaringiz orqali qalbingizni his qilmoqdaman.",
+                    "O'zbekona dildoshlik shuni talab qiladiki, aslo tortinmang, bu yerda hech qanday begonalar yo'q, hamma gap sirligicha qoladi."
+                ],
+                encouragements: [
+                    "Ushbu kunda o'zingizni aslo yolg'iz his qilmang. Bir piyola ko'k choy quyib, kayfiyatni bir oz ko'tarib oling.",
+                    "Ertamiz bugun qabul qilgan xotirjamligimizga bog'liq. Hamma narsani tartibga solamiz, hayotni go'zal tomonlariga boqaylik.",
+                    "Siz hayotda juda ko'p sinovlarni yengib o'tgansiz, bugungi kayfiyat esa vaqtinchalik xiralik xolos."
+                ],
+                questions: [
+                    "Kuningiz qanday o'tdi? Qaysi mayda voqea bugun kayfiyatingizga ko'proq ta'sir qildi?",
+                    "Hozirgi lahzada ichki holatingizda nima ko'proq yetishmayapti deb o'ylaysiz?",
+                    "Kelayotgan rejalaringiz orasida ko'nglingizni eng ko'p g'ash qilayotgan narsa nima?"
+                ]
+            },
+            work: {
+                openings: [
+                    "Eh, jigarim {address}. Ishdan, chop-choplar va tinimsiz mas'uliyatlardan ruhan butunlay charchaganingizni ko'rib, yuragim achidi.",
+                    "Qadrdon {address}im, yelkangizdagi yuklar haddan tashqari og'irlik qilib, tushkunlikka tushganingizni judayam yaxshi tushunyapman.",
+                    "Charchoq — bu sizning yashayotganingiz, halol rizq ilinjida va kelajak uchun astoydil kurashayotganingizning eng chiroyli dalilidir."
+                ],
+                reflections: [
+                    "Siz mashina emassiz, jigarim, siz tirik insonsiz. Charchash, hammasidan charchab, bir oz chekinishni xohlash mutlaqo normal holatdir.",
+                    "Dono xalqimiz 'Harakatda baraka' deb aytishgan, lekin shu bilan birga o'z sog'ligimizni saqlash eng ulug' omonat ekanini unutmaslik kerak.",
+                    "Hayotning barcha yumushlari biz xohlagandek oson bitmaydi, ba'zan tog'dek yumushlar insonni ruhan egib qo'yishi mumkin."
+                ],
+                encouragements: [
+                    "Hozir barcha ishlarni va muammolarni miyangizdan chiqarib tashlang. Hech narsa bir kunda dunyoni ag'darib yubormaydi.",
+                    "Siz bilan va qilayotgan harakatlaringiz bilan yaqinlaringiz va eng asosiysi men faxrlanaman, turing, bir yuzingizni yuving-da choy iching.",
+                    "Dunyoda hech qaysi boylik, martaba yoki topshiriq sizning sog'lom asablaringiz va tanaffusingiz o'rnini bosa olmaydi."
+                ],
+                questions: [
+                    "Sizni aynan ishda kim yoki nima ko'proq charchatyapti — bajarilmayotgan topshiriqlarmi yoki jamoaviy muhitmi?",
+                    "Kelgusi kunlarda o'zingizga qisqa, hech bo'lmasa yarim kunlik haqiqiy dam olish bera olasizmi?",
+                    "Ushbu charchoqni ketkazish uchun ko'proq nima qilishni istardingiz — shunchaki uxlashnimi yoki tabiatingizga mos sayohatnimi?"
+                ]
+            },
+            homesick: {
+                openings: [
+                    "Sizga bir gap aytaymi, mening matonatli, jasoratli {address}im. Musofir yurtlarda, Vatandan uzoqda yurak ezilishini so'z bilan ta'riflash qiyin.",
+                    "Musofirning noni shirin, lekin uning dardi hamisha og'ir bo'ladi, buni dildan his etaman, azizim {address}.",
+                    "Begona o'lkalarda o'z yo'lini topishga, oilasiga rizq yetkazishga harakat qilayotgan sizdek inson mening ko'zimda haqiqiy qahramondir."
+                ],
+                reflections: [
+                    "Sog'inch dardi inson ko'nglini yumshatadi, oilaning, Vatan quchog'ining naqadar muqaddasligini ruhan teran his qildiradi.",
+                    "Bobolarimiz 'O'z uying — o'lan to'shaging' deb aytib ketishgan. Musofirlikda topayotgan har bir tiyiningiz halol, barakali va savoblidir.",
+                    "Ushbu og'ir kunlar abadiy davom etmaydi. Har bir ketishning ortida albatta g'olibona, sharafli qaytish borligini unutmang."
+                ],
+                encouragements: [
+                    "O'zingizni begona yurtlarda aslo yolg'iz his qilmang. Siz butun o'zbek xalqining jasoratli timsolisiz, boshingizni baland ko'taring.",
+                    "Asosiysi sog'ligingizga ehtiyot bo'ling, siz uydagilarga sog'-salomat bo'lib qaytishingiz moddiy narsalardan million marta muhimroqdir.",
+                    "Yurak ezilganda, uydagilarga qo'ng'iroq qiling, ularning ovozidan va duolaridan kuch oling, sizni duoda eslashadi."
+                ],
+                questions: [
+                    "Vatanga, uyingizga qaytishga taxminan qancha vaqt qoldi deb reja qilyapsiz, jigarim?",
+                    "Yaqinlaringiz bilan oxirgi marta qachon dildan gaplashdingiz, ularning qaynoq salomlari sizga yetib kelyaptimi?",
+                    "Bugun aynan qaysi o'zbekona taomimizni yoki qaysi shahrimiz ko'chalarini ko'proq sog'indingiz?"
+                ]
+            },
+            finance: {
+                openings: [
+                    "Moliyaviy qiyinchiliklar, qarz va kredit yuklari har qanday kuchli erkak yoki ayolning yelkasini bika oladigan narsadir, aziz {address}.",
+                    "Pulsizlik yoki rejalarning moddiy tomondan o'xshamasligi sizning ruhan ezilishigizga sabab bo'layotganini yaxshi tushunaman, {address}.",
+                    "Rizq masalasida siqilayotgan qadrdon {address}im. Dunyoning barcha boyligi ham bir kun kelib tugaydi, ammo tushkunlikka tushmang."
+                ],
+                reflections: [
+                    "Xalqimiz 'Rizqni Xudo beradi, asabiylashmang, barchasi o'z joyiga tushadi' degan iborani bejiz aytishmaydi, baraka harakatda.",
+                    "Sog'liq bo'lsa, qo'l-oyoq but bo'lsa, har qanday yo'qotilgan pulni ikki barobar qilib qayta ishlab topish mumkin.",
+                    "Hayotda moddiy inqirozlar har bir buyuk tadbirkor yoki insonning hayotida kamida bir marta ro'y beradigan vaqtinchalik sinovdir."
+                ],
+                encouragements: [
+                    "Hozir o'zingizni aslo ayblamang. Qarzlar va majburiyatlar vaqtinchalik narsalar, ular yechiladi, asabni asrang, asosiysi sog'liq.",
+                    "Bizda har qanday vaziyatdan chiqish kuchi bor. Kichik qadamlar bilan harakat qilishni rejalashtiring, duo va harakatni aslo to'xtatmang.",
+                    "Boylik keldi-ketti narsa, bugun kamaygan bo'lsa, ertaga Xudoyim kutilmagan tomondan eshigini ochib, baraka yog'diradi."
+                ],
+                questions: [
+                    "Moddiy inqirozdan chiqish uchun birinchi o'rinda qaysi kichik qadamni yoki rejani amalga oshira olamiz deb o'ylaysiz?",
+                    "Sizga yordam bera oladigan, sizni tushunadigan ishonchli do'st yoki qarindoshlaringiz bormi hozirda?",
+                    "Qarz yoki moliyaviy bosim sizni ko'proq ruhan ezayaptimi yoki muammoning yechimi umuman ko'rinmayotganimi?"
+                ]
+            },
+            failure: {
+                openings: [
+                    "Afsuski, kutilgan natijaga erisha olmaslik, imtihondan yoki maqsadlardan yiqilish kishini judayam og'riqli his qiladi, {address}.",
+                    "Hech ishingiz o'xshamayotgani, rejalarning barbod bo'layotgani sababli taslim bo'lish darajasiga kelganingizni ko'rib turibman, {address}.",
+                    "Mening aziz {address}im, muvaffaqiyatsizlik bu yo'lning oxiri emas, bu shunchaki qayerda xato bo'lganini ko'rsatuvchi dars xolos."
+                ],
+                reflections: [
+                    "Dunyodagi eng muvaffaqiyatli insonlar ham g'alabaga erishguncha yuzlab marotaba yiqilganlar, rad etilganlar va xato qilganlar.",
+                    "Dono xalqimiz 'Sariq oltin asrab bo'lmas, sabr asraydi' deydi. Sinovlar bizni sindirish uchun emas, balki toblash uchun keladi.",
+                    "Yiqilish — bu zaiflik emas, aksincha tajriba orttirgan holda yanada aqlliroq va kuchliroq bo'lib qaytadan boshlash imkoniyatidir."
+                ],
+                encouragements: [
+                    "Boshingizni tik ko'taring! Bitta yoki ikkita xato sizning butun umrlik salohiyatingizni va qadringizni belgilay olmaydi.",
+                    "Hozirgi mag'lubiyat hissini dildan chiqarib yuboring. O'zingizga qaytadan imkon bering, men sizning izingizdan duodaman, siz buni uddalaysiz.",
+                    "Qayta harakat qilishdan aslo qo'rqmang. Siz hali hammaga o'zingizning asl kuch-qudratingizni va iqtidoringizni ko'rsatib qo'yasiz."
+                ],
+                questions: [
+                    "Yiqilgan ishingizda aynan qaysi nuqta yoki xato sizga eng katta dars bo'ldi deb o'ylaysiz?",
+                    "Bu safar qanday yangicha strategiya yoki boshqacha yondashuv bilan qaytadan harakat boshlamoqchisiz?",
+                    "Qayta urinish uchun sizga hozirda ruhan qanday dalda yoki amaliy yordam ko'proq yetishmayapti?"
+                ]
+            },
+            health: {
+                openings: [
+                    "Sog'ligingiz yomonlashgani, o'zingizni quvvatsiz va xasta his qilayotganingiz meni ruhan judayam g'amga soldi, aziz {address}.",
+                    "Tana og'riganda, ko'ngil ham charchaydi. Hozirgi holsizligingiz va siqilishlaringizni to'liq tushunaman, mening {address}im.",
+                    "Xastalik bilan kurashayotgan sabrli {address}im, har bir dardingiz ortida ruhan poklanish va ulkan darajada toblanish bor."
+                ],
+                reflections: [
+                    "Inson tanasi gohida dam olishni, barcha tashvishlardan uzilib, faqat o'ziga e'tibor qaratishni talab qiladigan nozik omonatdir.",
+                    "Xalqimizda 'Sog'lik — tuman boylik' deb bejiz aytishmagan. Ruxiy tetiklik va ijobiy kayfiyat shifo topishning yarmini tashkil etadi.",
+                    "Dard bergan shifosini ham qo'shib beradi. Hozirgi barcha dodingiz va og'riqlaringiz vaqtinchalik, ertaga yorug' kunlar bor."
+                ],
+                encouragements: [
+                    "Hozir dunyoning barcha ishlari va muammolarini butunlay o'chiring. Siz faqat shifo topish va dam olish haqida o'ylashingiz shart.",
+                    "Siz nihoyatda matonatli va irodali insonsiz. Bu xastalikni albatta engib o'tib, tez orada oyoqqa turishingizga ishonaman.",
+                    "Yaxshi shifokorlar maslahatiga amal qiling, ko'p iliq choy iching, miyangizni barcha g'amlardan tozalang, asosiysi ruhan tetik bo'ling."
+                ],
+                questions: [
+                    "Hozirgi holatingizda shifokorlar nima deb tavsiya qilishdi, barcha choralarni ko'ryapsizmi?",
+                    "Yoningizda sizga qarab turadigan, issiq-sovug'ingizdan xabardor yaqin sirdoshingiz bormi hozirda?",
+                    "Ruhan tinchlanishingiz uchun sizga dori-darmondan tashqari qanday muhit yaratish lozim deb o'ylaysiz?"
+                ]
+            },
+            default: {
+                openings: [
+                    "Yozgan gaplaringizni har bir so'zigacha tahlil qildim, dilingizdagi bor o'y-kechinmalarni quloq tutib eshitdim, {address}.",
+                    "Mening samimiy va sevikli {address}im, suhbatingiz men uchun har doim juda qadrli va iliq, siz bilan gaplashish darmondir.",
+                    "Sizning fikrlaringiz va hozirgi vaziyatingiz mendan to'liq e'tibor va samimiy o'zbekona tushunishni talab qiladi, jigarim."
+                ],
+                reflections: [
+                    "Hayot bir tekis va doimiy ravon yo'ldan iborat emas, unda baland-past to'siqlar uchrashi mutlaqo tabiiydir.",
+                    "Dono xalqimiz 'Yaxshi gap — jonga malham' deb juda to'g'ri aytishgan. Suhbatlashish ruximizni tozalashga yordam beradi.",
+                    "O'zbekona mehmondo'stlik ohangida aytadigan bo'lsam, har qanday vaziyatda ham ko'ngilni cho'ktirmaslik eng katta g'alabadir."
+                ],
+                encouragements: [
+                    "Siz juda qimmatbaho, o'ziga xos va buyuk qalbga ega insonsiz. Aslo o'zingizga nisbatan shubha va tushkunlikka yo'l bermang.",
+                    "Hozir mayin tinchlantiruvchi musiqa ostida bir piyola shirin ko'k choyni ichib, barcha yomon xayollarni miyadan chiqarib yuboring.",
+                    "Biz birgalikda har qanday murakkab sinovlarni osonlikcha engib o'tamiz, harakatda va duoda bardavom bo'ling."
+                ],
+                questions: [
+                    "Hozir ayni vaqtda sizni eng ko'p nima tinchlantira oladi yoki kayfiyatingizni oz bo'lsa-da ko'tara oladi?",
+                    "Bu haqida siz bilan yaqindan hamdard bo'la oladigan do'stingiz yoki oila a'zolaringiz bilan gaplashib ko'rdingizmi?",
+                    "Dilingizda yana qanday yashirin gaplar yoki sirlar qoldi, keling hammasini oxirigacha gaplashib olaylik?"
+                ]
+            }
+        };
+
+        // Anti-repetition dynamic sentence indexing memory
+        let sessionMemory = {
+            greetings: { openings: [], reflections: [], encouragements: [], questions: [] },
+            work: { openings: [], reflections: [], encouragements: [], questions: [] },
+            homesick: { openings: [], reflections: [], encouragements: [], questions: [] },
+            finance: { openings: [], reflections: [], encouragements: [], questions: [] },
+            failure: { openings: [], reflections: [], encouragements: [], questions: [] },
+            health: { openings: [], reflections: [], encouragements: [], questions: [] },
+            default: { openings: [], reflections: [], encouragements: [], questions: [] }
+        };
+
         const nationalProverbs = [
-            "Sariq oltin asrab bo'lmas, sabr asraydi.",
-            "Rizqni Xudo beradi, asabiylashmang, jigarim.",
+            "Sariq oltin asrab bo'lmas, sabr asraydi, jigarim.",
+            "Rizqni Xudo beradi, asabiylashmang, barchasi go'zal bo'ladi.",
             "Harakatda baraka, bir silkinib o'zingizga keling!",
             "Egilgan boshni qilich kesmas, sabr qilgan yutqazmas.",
-            "Yaxshi gap — jonga malham.",
+            "Yaxshi gap — jonga malham, yomon gap bir o't.",
             "Yaxshi kunlar hammasi hali oldinda, duo qilishdan to'xtamang.",
             "Mehnat baxt keltirar, sabr taxt keltirar, birodarim.",
-            "Har qorong'u tunning yorug' tongi bor, tushkunlikka o'rin yo'q!"
+            "Har qorong'u tunning albatta yorug' tongi bor, tushkunlikka aslo o'rin yo'q!",
+            "Eringan qolar yerda, erinmagan oshar dovdan.",
+            "O'z uying — o'lan to'shaging, ko'ngilni har qanday vaziyatda cho'ktirma.",
+            "Suv kelsa simirgan, dard kelsa sabr qilgan doimo g'olib bo'ladi."
         ];
 
-        // Tone.js yordamida tinchlantiruvchi musiqa yaratish
+        // Tone.js Ambient Audio Controls
         let synth = null;
         let isPlaying = false;
         let loopId = null;
 
         function initSynth() {
             if (!synth) {
-                // Tinchlantiruvchi iliq chastotadagi PolySynth
                 synth = new Tone.PolySynth(Tone.Synth, {
-                    oscillator: { type: "triangle" },
-                    envelope: { attack: 0.8, decay: 0.5, sustain: 0.6, release: 1.2 }
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 2.2, decay: 1.8, sustain: 0.8, release: 2.8 }
                 }).toDestination();
-                synth.volume.value = -18; // Past va mayin ovoz
+                synth.volume.value = -18;
             }
         }
 
@@ -327,71 +561,65 @@
             const audioText = document.getElementById("audioText");
 
             if (isPlaying) {
-                // To'xtatish
                 Tone.Transport.stop();
                 if (loopId) Tone.Transport.clear(loopId);
                 audioIcon.className = "fa-solid fa-volume-xmark text-amber-500";
                 audioText.innerText = "Dildosh ohangi";
                 isPlaying = false;
             } else {
-                // Pentatonik tinchlantiruvchi akkordlar loopini boshlash
+                // Harmonic Pentatonic Scale (Relaxing, traditional feel)
                 const chords = [
-                    ["C4", "E4", "G4", "B4"],
                     ["A3", "C4", "E4", "G4"],
                     ["F3", "A3", "C4", "E4"],
+                    ["C3", "E3", "G3", "B3"],
                     ["G3", "B3", "D4", "F4"]
                 ];
                 let index = 0;
 
-                Tone.Transport.bpm.value = 60; // Juda sekin sur'at
+                Tone.Transport.bpm.value = 40;
                 
                 loopId = Tone.Transport.scheduleRepeat((time) => {
                     let notes = chords[index % chords.length];
-                    synth.triggerAttackRelease(notes, "2n", time);
+                    synth.triggerAttackRelease(notes, "3m", time);
                     index++;
-                }, "2m");
+                }, "4m");
 
                 Tone.Transport.start();
-                audioIcon.className = "fa-solid fa-volume-high text-emerald-500 animate-pulse";
+                audioIcon.className = "fa-solid fa-volume-high text-amber-400 animate-pulse";
                 audioText.innerText = "Ohang chalinyapti";
                 isPlaying = true;
             }
         }
 
-        // Choy quyish funksiyasi
+        // Pouring visual tea simulation
         function pourTea() {
-            // Animatsiyani faollashtirish
             const steam = document.getElementById("teaSteam");
             steam.classList.remove("opacity-0");
             steam.classList.add("opacity-100");
 
-            // Tone.js choy quyilish ovozi simulyatsiyasi (baland chastotali noiz)
             try {
                 initSynth();
                 if (Tone.context.state === 'running' || isPlaying) {
                     const noiseSynth = new Tone.NoiseSynth({
                         noise: { type: 'pink' },
-                        envelope: { attack: 0.5, decay: 1.5, sustain: 0 }
+                        envelope: { attack: 0.5, decay: 2.0, sustain: 0 }
                     }).toDestination();
-                    noiseSynth.volume.value = -12;
-                    noiseSynth.triggerAttackRelease("1.5s");
+                    noiseSynth.volume.value = -15;
+                    noiseSynth.triggerAttackRelease("1.8s");
                 }
             } catch(e) {}
 
-            // Tasodifiy maqol tanlash
             setTimeout(() => {
                 const randomProverb = nationalProverbs[Math.floor(Math.random() * nationalProverbs.length)];
                 document.getElementById("proverbBox").innerText = `"${randomProverb}"`;
                 
-                // Animatsiyani o'chirish
                 setTimeout(() => {
                     steam.classList.remove("opacity-100");
                     steam.classList.add("opacity-0");
-                }, 2000);
-            }, 500);
+                }, 2200);
+            }, 600);
         }
 
-        // Sozlamalarni yangilash
         function updateProfile() {
             const inputVal = document.getElementById("userNameInput").value.trim();
             userProfile.name = inputVal || "Do'stim";
@@ -401,7 +629,6 @@
         function setAddress(type) {
             userProfile.addressType = type;
             
-            // Tugmalar aktiv holatini yangilash
             document.querySelectorAll(".address-btn").forEach(btn => {
                 btn.classList.remove("bg-amber-500/20", "border-amber-500");
                 btn.classList.add("bg-stone-800", "border-stone-700");
@@ -437,7 +664,7 @@
                     label.className = "text-yellow-400 font-bold";
                     break;
                 case 5:
-                    label.innerText = "Ruhan kuchli 💪";
+                    label.innerText = "Kuchga to'la 💪";
                     label.className = "text-emerald-400 font-bold";
                     break;
             }
@@ -446,56 +673,157 @@
         function updateSubStatusText() {
             const status = document.getElementById("chatSubStatus");
             const addressCapitalized = userProfile.addressType.charAt(0).toUpperCase() + userProfile.addressType.slice(1);
-            status.innerText = `${userProfile.name} ${addressCapitalized} bilan dildan suhbat`;
+            status.innerText = `${userProfile.name} (${addressCapitalized}) bilan dildan suhbat`;
         }
 
-        // Aqlli javoblar algoritmi (Kognitiv dildoshlik)
-        function generateNotiqResponse(userMsg) {
-            const msg = userMsg.toLowerCase();
-            const name = userProfile.name;
+        function togglePasswordVisibility() {
+            const input = document.getElementById("apiKeyInput");
+            const eyeIcon = document.getElementById("eyeIcon");
+            if (input.type === "password") {
+                input.type = "text";
+                eyeIcon.className = "fa-regular fa-eye-slash";
+            } else {
+                input.type = "password";
+                eyeIcon.className = "fa-regular fa-eye";
+            }
+        }
+
+        function saveApiSettings() {
+            const provider = document.getElementById("apiProviderSelect").value;
+            const apiKey = document.getElementById("apiKeyInput").value.trim();
+
+            if (!apiKey) {
+                showToast("Iltimos, API kalitini kiriting! ⚠️", "error");
+                return;
+            }
+
+            aiConfig.provider = provider;
+            aiConfig.apiKey = apiKey;
+
+            localStorage.setItem("notiq_provider", provider);
+            localStorage.setItem("notiq_key", apiKey);
+
+            updateUiForAiMode(true);
+            showToast("Shaxsiy API kalit muvaffaqiyatli yoqildi! 🚀", "success");
+        }
+
+        function clearApiSettings() {
+            document.getElementById("apiKeyInput").value = '';
+            
+            localStorage.removeItem("notiq_provider");
+            localStorage.removeItem("notiq_key");
+
+            aiConfig.provider = 'offline';
+            aiConfig.apiKey = '';
+
+            updateUiForAiMode(false);
+            showToast("Shaxsiy kalit o'chirildi, Offline Dildosh rejimiga qaytildi. ✨", "info");
+        }
+
+        function updateUiForAiMode(isCustomActive) {
+            const headerBadge = document.getElementById("headerEngineBadge");
+            const aiStatusTag = document.getElementById("aiStatusTag");
+            const pulse = document.getElementById("pulseIndicator");
+            const badgeText = document.getElementById("badgeText");
+
+            if (isCustomActive) {
+                headerBadge.innerText = aiConfig.provider === 'gemini' ? "Google Gemini AI" : "OpenAI ChatGPT";
+                headerBadge.className = "text-[10px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20";
+                
+                aiStatusTag.innerText = "Cheksiz AI Faol";
+                aiStatusTag.className = "text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full border border-purple-500/20 font-bold";
+                
+                pulse.className = "absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-stone-900 animate-ping";
+                badgeText.innerText = "Shaxsiy AI Faol";
+                badgeText.parentElement.className = "px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-full text-xs border border-emerald-500/20 font-medium flex items-center gap-1.5";
+            } else {
+                headerBadge.innerText = "Oflayn Dildosh";
+                headerBadge.className = "text-[10px] bg-stone-800 text-stone-400 px-1.5 py-0.5 rounded border border-stone-700";
+                
+                aiStatusTag.innerText = "Oflayn Rejim";
+                aiStatusTag.className = "text-[10px] bg-stone-800 text-stone-400 px-2 py-0.5 rounded-full border border-stone-700 font-bold";
+                
+                pulse.className = "absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-stone-900 animate-pulse";
+                badgeText.innerText = "Jonli Muloqot Faol";
+                badgeText.parentElement.className = "px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded-full text-xs border border-amber-500/20 font-medium flex items-center gap-1.5";
+            }
+        }
+
+        // Anti-repetition selection helper
+        function selectUniqueElement(category, subKey) {
+            const list = DIALOG_MATRIX[category][subKey];
+            let usedIndices = sessionMemory[category][subKey];
+            
+            // Filter out indices used recently
+            let availableIndices = [];
+            for (let i = 0; i < list.length; i++) {
+                if (!usedIndices.includes(i)) {
+                    availableIndices.push(i);
+                }
+            }
+
+            // If all elements are used, reset historical queue
+            if (availableIndices.length === 0) {
+                sessionMemory[category][subKey] = [];
+                availableIndices = Array.from({length: list.length}, (_, i) => i);
+            }
+
+            const chosenIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            
+            // Record index usage
+            sessionMemory[category][subKey].push(chosenIndex);
+            if (sessionMemory[category][subKey].length > Math.floor(list.length / 2)) {
+                sessionMemory[category][subKey].shift();
+            }
+
+            return list[chosenIndex];
+        }
+
+        // Smart Procedural Fallback generator
+        function generateLocalFallbackResponse(userMsg) {
+            const msg = userMsg.toLowerCase().trim();
             const address = getAppropriateAddress();
+            
+            // Detect matched category based on user words
+            let category = "default";
+            if (msg.includes("charch") || msg.includes("ish") || msg.includes("to'yd") || msg.includes("toyd") || msg.includes("ezild") || msg.includes("o'qish") || msg.includes("oqish")) {
+                category = "work";
+            } else if (msg.includes("musofir") || msg.includes("vatan") || msg.includes("sog'in") || msg.includes("sogin") || msg.includes("rossiya") || msg.includes("koreya") || msg.includes("uydagi") || msg.includes("oila")) {
+                category = "homesick";
+            } else if (msg.includes("pul") || msg.includes("qarz") || msg.includes("kredit") || msg.includes("qiynal") || msg.includes("ishsiz") || msg.includes("moliyaviy")) {
+                category = "finance";
+            } else if (msg.includes("yiqil") || msg.includes("o'xsha") || msg.includes("oxsha") || msg.includes("imtihon") || msg.includes("omadsiz") || msg.includes("xato")) {
+                category = "failure";
+            } else if (msg.includes("kasal") || msg.includes("og'ri") || msg.includes("ogri") || msg.includes("shifoxona") || msg.includes("sog'liq") || msg.includes("sogliq") || msg.includes("tuzal")) {
+                category = "health";
+            } else if (msg.includes("salom") || msg.includes("assalom") || msg.includes("qalay") || msg.includes("yaxshimisiz") || msg.includes("hormang")) {
+                category = "greetings";
+            }
 
-            // Stress darajasiga ko'ra qo'shimcha dalda beruvchi gaplar
-            let stressBonus = "";
+            // Synthesize dynamic parts
+            let p1 = selectUniqueElement(category, "openings");
+            let p2 = selectUniqueElement(category, "reflections");
+            let p3 = selectUniqueElement(category, "encouragements");
+            let p4 = selectUniqueElement(category, "questions");
+
+            // Emotional stress modifier
+            let stressModifier = "";
             if (userProfile.stressLevel <= 2) {
-                stressBonus = ` Hozir yuragingiz biroz charchab turganini ko'rib turibman, lekin aslo siqilmang, har bir darning shifosi bor, ${address}.`;
+                stressModifier = "\n\nHozirgi ruhiy charchog'ingiz juda yuqori ekanligini sezyapman, iltimos, o'zingizni asrang. Hech qaysi ish sizning ko'ngil xotirjamligingiz va sihat-salomatligingizdan ustun turolmaydi, jigarim.";
+            } else if (userProfile.stressLevel >= 4) {
+                stressModifier = "\n\nSizdagi ichki iroda va maqsad sari barqaror intilish menga kuch bag'ishlaydi. Bu jarayonni boshqara olishingizga aslo shubham yo'q!";
             }
 
-            // 1. Ishdan, hayotdan charchoq
-            if (msg.includes("charch") || msg.includes("to'yd") || msg.includes("toyd") || msg.includes("ezild")) {
-                return `Ehh ${address}-a, charchash ham bor gap. Peshona teri bilan topilgan non dunyodagi eng totli non bo'ladi! Siz hozir katta sinovlardasiz, buni yaxshilab dam olib yengish kerak. Bir piyola issiq choy ichib, o'zingizga keling. Ertaga yangi kun, yangi imkoniyatlar. Hali hammasi zo'r bo'ladi, Xudo xohlasa! ☕✊${stressBonus}`;
-            }
+            // Replace dynamic patterns
+            let fullResponse = `${p1}\n\n${p2} ${p3}\n\n${p4}${stressModifier}`;
+            
+            // Format templates
+            fullResponse = fullResponse.replaceAll("{address}", address);
+            fullResponse = fullResponse.replaceAll("{name}", userProfile.name);
 
-            // 2. Musofirlik dardi
-            if (msg.includes("musofir") || msg.includes("rossiya") || msg.includes("vatan") || msg.includes("sog'in") || msg.includes("sogin") || msg.includes("chet el")) {
-                return `Musofir yurtda yurgan qadrdon birodarim, mening qahramonim! Oila tinchligi, farzandlar kamoli va ro'zg'or butligi uchun uzoqlarda yurish har kimning ham qo'lidan kelmaydi. Sabringizga ming bor balli! Sizni uyingizda, Vatanda intiqlik va katta faxr bilan kutayotganlar borligini unutmang. Duo qilib qolaman, aslo yiqilmang, asosiysi sog'liq! 🤲🌍✊`;
-            }
-
-            // 3. Imtihon, omadsizlik, ish o'xshamasligi
-            if (msg.includes("yiqil") || msg.includes("o'xsha") || msg.includes("oxsha") || msg.includes("imtihon") || msg.includes("omadsiz") || msg.includes("pul") || msg.includes("bankrot")) {
-                return `Shoshilmang, ${address}! Rizqni aslo banda bermaydi, uni Yaratganning o'zi yetkazadi. "Sariq oltin asrab bo'lmas, sabr asraydi" deydi dono xalqimiz. Imtihondan yiqilish yoki ish o'xshamasligi — bu oxiri degani emas, qaytadan yanada kuchliroq bo'lib boshlash imkoniyatidir. Hali hammaga kimligingizni ko'rsatib qo'yasiz, baraka harakatda! 🧠✊`;
-            }
-
-            // 4. Salomlashish va hol-ahvol
-            if (msg.includes("salom") || msg.includes("assalom") || msg.includes("qale") || msg.includes("yaxshimi")) {
-                return `Assalomu alaykum qadrdonim ${name}! Keling, dildan suhbatlashaylik. Ko'nglingizni nimalar bezovta qilyapti, nimalar haqida gaplashgimiz bor? Men xuddi chin akangiz, ukangiz yoki qadrdoningizdek eshitaman. ✊☕`;
-            }
-
-            // 5. Sog'liq va kasallik
-            if (msg.includes("kasal") || msg.includes("og'ri") || msg.includes("ogri") || msg.includes("shifo")) {
-                return `Voy ${address}-a, dard bergan shifosini ham beradi, aslo siqilmang. Sog'liq — bu bizga berilgan eng katta ne'mat va omonat. O'zingizni asrang, yaxshi narsalarni o'ylang, vaqtida dam oling. Tez orada oyoqqa turib, yana g'ayrat bilan ishlarga kirishib ketasiz, bunga ishonaman! 🤲❤️`;
-            }
-
-            // 6. Zerikish va yolg'izlik
-            if (msg.includes("zerik") || msg.includes("yolg'iz") || msg.includes("yolgiz") || msg.includes("hech kim")) {
-                return `Yolg'izman demang, ${address}! Biz bor-ku axir. Keling, bir piyola ko'k choydan olib, yaxshi narsalar haqida gaplashaylik. Shuni bilingki, dunyoda sizning o'rningiz juda muhim va siz kimgadir juda keraksiz. Men doim shu yerda sizga daldaman! 🙌☕`;
-            }
-
-            // Standart iliq daldali javob (agar kalit so'z topilmasa)
-            return `Tushunaman, ${address}. Dunyo ishlari doim ham biz xohlagandek silliq kechavermaydi. Ba'zida shunday og'ir lahzalar keladiki, hamma narsadan voz kechgingiz keladi. Lekin aynan mana shu lahzalardagi chidamlilik sizni chinakam qahramonga aylantiradi. Sabr qiling, harakatdan to'xtamang. Men siz bilanman, g'ayrat qiling! ✊🧠`;
+            return fullResponse;
         }
 
-        // Murojaat turini moslab olish
         function getAppropriateAddress() {
             const name = userProfile.name;
             switch(userProfile.addressType) {
@@ -507,39 +835,129 @@
             }
         }
 
-        // Xabar jo'natish jarayoni
+        // Fetch AI Responses (Gemini or OpenAI)
+        async function fetchAIResponse(userMsg) {
+            const address = getAppropriateAddress();
+            
+            // Routing to our dynamic fallback system if API key is not active
+            if (aiConfig.provider === 'offline' || !aiConfig.apiKey) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(generateLocalFallbackResponse(userMsg));
+                    }, 1200);
+                });
+            }
+
+            const systemPrompt = `Siz charchagan, stressga tushgan va ruhiy qo'llab-quvvatlashga muhtoj o'zbek foydalanuvchilari uchun "Motivatsion Notiq" virtual yordamchisiz.
+            
+            QOIDALARINGIZ:
+            1. TONALILIK: Samimiy, xuddi qadrdon do'st, aka yoki uka singari gapiring. Hech qanday rasmiy yoki robotik ("Sizga yordam berishimga ijozat bering" kabi) jumlalarni ishlatmang. O'zbekona mehmondo'stlik va mehr ohangini saqlang.
+            2. MENTALITET: Xalqona maqollar, hikmatli so'zlar va kundalik hayotdagi iliq iboralardan foydalaning ("Oka, sabr qiling...", "Musofir yurtda yurgan birodarim...", "Rizqni Xudo beradi", "Baraka harakatda, jigarim").
+            3. MUROJAAT: Foydalanuvchining ismi: "${userProfile.name}", murojaat turi esa "${userProfile.addressType}" (unga qarab "Uka", "Aka", "Opa", "Singlim", "Jigarim" deb murojaat qiling). Hozirgi murojaat shaklingiz aynan mana shu bo'lsin: "${address}".
+            4. HOLAT: Foydalanuvchining hozirgi stress darajasi: ${userProfile.stressLevel} (1 - juda siqilgan, 5 - ruhan juda kuchli). Shunga qarab daldani sozlashingiz kerak.
+            5. JAVOB HAJMI: Javoblaringiz mutlaqo qisqa bo'lmasin! Kamida 2-3 ta batafsil va ta'sirli xatboshi (paragraph) ko'rinishida yozing. Hech qachon gapni oxiriga yetkazmasdan, chala yoki yarimta holatda qoldirmang. Fikringizni oxirigacha chiroyli, mantiqiy va tugallangan shaklda yozing. Maxsus emojilardan unumli foydalaning (✊, 🙌, 🧠, ☕, 🤲).
+            6. TIL: Faqat o'zbek tilida (foydalanuvchi qaysi alifboda yozsa - krill yoki lotin, o'shatda) javob bering.`;
+
+            conversationHistory.push({ role: "user", text: userMsg });
+            if (conversationHistory.length > 8) {
+                conversationHistory = conversationHistory.slice(-8);
+            }
+
+            try {
+                let apiKey = aiConfig.apiKey;
+                
+                if (aiConfig.provider === 'openai') {
+                    const messages = [
+                        { role: "system", content: systemPrompt },
+                        ...conversationHistory.map(item => ({
+                            role: item.role === 'user' ? 'user' : 'assistant',
+                            content: item.text
+                        }))
+                    ];
+
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-4o-mini',
+                            messages: messages,
+                            temperature: 0.7,
+                            max_tokens: 1200
+                        })
+                    });
+
+                    if (!response.ok) throw new Error("OpenAI error");
+                    const data = await response.json();
+                    const responseText = data.choices[0].message.content;
+                    conversationHistory.push({ role: "model", text: responseText });
+                    return responseText;
+                } else {
+                    // Google Gemini API Engine
+                    const contents = conversationHistory.map(item => ({
+                        role: item.role === 'user' ? 'user' : 'model',
+                        parts: [{ text: item.text }]
+                    }));
+
+                    const payload = {
+                        contents: contents,
+                        systemInstruction: {
+                            parts: [{ text: systemPrompt }]
+                        },
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 1500
+                        }
+                    };
+
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error("Gemini API request failed");
+                    const data = await response.json();
+                    const responseText = data.candidates[0].content.parts[0].text;
+                    conversationHistory.push({ role: "model", text: responseText });
+                    return responseText;
+                }
+            } catch (error) {
+                console.error("API Error, automatically routing to dynamic fallback generator:", error);
+                conversationHistory.pop();
+                return generateLocalFallbackResponse(userMsg);
+            }
+        }
+
         function sendQuickMessage(text) {
             document.getElementById("userInput").value = text;
             handleFormSubmit(new Event('submit'));
         }
 
-        function handleFormSubmit(event) {
+        async function handleFormSubmit(event) {
             event.preventDefault();
             const input = document.getElementById("userInput");
             const messageText = input.value.trim();
             if (!messageText) return;
 
-            // Foydalanuvchi xabarini ekranga chiqarish
             appendMessage(messageText, 'user');
             input.value = "";
 
-            // Tone.js yordamida kichik audio effekt (Xabar yuborilganda)
             try {
                 initSynth();
                 if (Tone.context.state === 'running' || isPlaying) {
-                    synth.triggerAttackRelease("E5", "8n");
+                    synth.triggerAttackRelease("E4", "8n");
                 }
             } catch(e) {}
 
-            // Notiqning javobini simulyatsiya qilish (Typing delay bilan)
             const typingIndicator = document.getElementById("typingIndicator");
             const typingText = document.getElementById("typingIndicatorText");
             
-            // Xarakterga mos typing matni
             const typingPhrases = [
-                "Notiq jigarimiz o'ylanmoqda...",
-                "Notiq siz uchun eng iliq so'zlarni qidirmoqda...",
-                "Sizga choy quyib, dildan javob yozilmoqda..."
+                "Notiq dilingizdagi gaplarni eshitmoqda va fikrlamoqda...",
+                "Sizga issiq ko'k choy quyib, o'zbekona daldalarni tayyorlamoqda..."
             ];
             typingText.innerText = typingPhrases[Math.floor(Math.random() * typingPhrases.length)];
             typingIndicator.classList.remove("hidden");
@@ -547,26 +965,37 @@
             const chatContainer = document.getElementById("chatContainer");
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            setTimeout(() => {
-                const botResponse = generateNotiqResponse(messageText);
+            setTimeout(async () => {
+                let botResponse = await fetchAIResponse(messageText);
+
                 typingIndicator.classList.add("hidden");
                 appendMessage(botResponse, 'bot');
                 
-                // Pastki qismdagi tasodifiy kotirovkani yangilash
-                document.getElementById("footerQuote").innerText = `"${botResponse.replace(/[🧔✊☕🤲🌍🧠❤️🙌]/g, '').slice(0, 100)}..."`;
+                updateFooterQuote(botResponse);
 
-                // Tone.js yordamida xabar kelganlik ovozi
                 try {
                     initSynth();
                     if (Tone.context.state === 'running' || isPlaying) {
-                        synth.triggerAttackRelease(["C5", "G5"], "8n", "+0.1");
+                        synth.triggerAttackRelease(["C4", "G4"], "8n", "+0.1");
                     }
                 } catch(e) {}
 
-            }, 1200 + Math.random() * 800); // 1.2s - 2s oralig'ida insoniy kechikish
+            }, 1000 + Math.random() * 800);
         }
 
-        // Xabarni chat konteyneriga qo'shish
+        function updateFooterQuote(fullText) {
+            const cleanText = fullText.replace(/[🧔✊☕🤲🌍🧠❤️🙌🌟🙂😊🥺😞]/g, '').trim();
+            const sentences = cleanText.split(/[.!?]+/);
+            let firstSentence = sentences[0];
+            
+            if (firstSentence && firstSentence.trim().length > 15 && firstSentence.trim().length < 140) {
+                document.getElementById("footerQuote").innerText = `"${firstSentence.trim()}."`;
+            } else {
+                const randomProv = nationalProverbs[Math.floor(Math.random() * nationalProverbs.length)];
+                document.getElementById("footerQuote").innerText = `"${randomProv}"`;
+            }
+        }
+
         function appendMessage(text, sender) {
             const chatContainer = document.getElementById("chatContainer");
             const messageDiv = document.createElement("div");
@@ -577,7 +1006,7 @@
                 messageDiv.className = "flex items-start gap-2.5 max-w-[85%] self-end animate-fade-in";
                 messageDiv.innerHTML = `
                     <div class="text-right">
-                        <div class="bg-amber-500 text-stone-950 font-medium rounded-2xl rounded-tr-none px-4 py-3 text-sm leading-relaxed shadow-md">
+                        <div class="bg-amber-500 text-stone-950 font-medium rounded-2xl rounded-tr-none px-4 py-3 text-sm leading-relaxed shadow-md whitespace-pre-wrap text-left">
                             ${text}
                         </div>
                         <span class="text-[10px] text-stone-500 mt-1 block px-1">${time}</span>
@@ -589,14 +1018,14 @@
             } else {
                 messageDiv.className = "flex items-start gap-2.5 max-w-[85%] self-start animate-fade-in";
                 messageDiv.innerHTML = `
-                    <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-lg">
                         🧔
                     </div>
                     <div>
-                        <div class="bg-stone-900 border border-stone-800 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-stone-100 leading-relaxed shadow-md">
+                        <div class="bg-stone-900 border border-stone-800 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-stone-100 leading-relaxed shadow-md whitespace-pre-wrap">
                             ${text}
                         </div>
-                        <span class="text-[10px] text-stone-500 mt-1 block px-1">${time}</span>
+                        <span class="text-[10px] text-stone-550 mt-1 block px-1">${time}</span>
                     </div>
                 `;
             }
@@ -605,18 +1034,37 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        // Suhbatni butkul tozalash
         function clearChat() {
             const chatContainer = document.getElementById("chatContainer");
             chatContainer.innerHTML = "";
+            conversationHistory = [];
             appendMessage(`Assalomu alaykum, jigarim! Yangidan gaplashamiz. Gaping bo'lsa tortinmasdan ayt, men seni tinglashga har doim tayyorman! ✊☕`, 'bot');
         }
 
-        // Kotirovkani nusxalash (Clipboard)
+        // Display notifications (Replacing raw alert mechanisms)
+        function showToast(message, type = "info") {
+            const toast = document.createElement("div");
+            let bgColor = "bg-stone-800 border-stone-700 text-stone-200";
+            if (type === "success") bgColor = "bg-emerald-600 text-stone-950 border-emerald-500";
+            if (type === "error") bgColor = "bg-red-600 text-stone-100 border-red-500";
+            
+            toast.className = `fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-full shadow-2xl text-xs font-bold z-50 border transition-all duration-300 transform translate-y-2 opacity-0 ${bgColor}`;
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add("translate-y-2", "opacity-0");
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
         function copyCurrentQuote() {
             const quoteText = document.getElementById("footerQuote").innerText;
             
-            // Clipboard ga yozish uchun muqobil eski uslub (safari / mobile iframe lar uchun xavfsiz)
             const el = document.createElement('textarea');
             el.value = quoteText;
             document.body.appendChild(el);
@@ -624,35 +1072,27 @@
             document.execCommand('copy');
             document.body.removeChild(el);
 
-            // Xabarnoma chiqarish (alert ishlatmasdan)
-            const notify = document.createElement("div");
-            notify.className = "fixed bottom-5 left-1/2 -translate-x-1/2 bg-emerald-500 text-stone-950 font-bold text-xs px-4 py-2 rounded-full shadow-lg z-50 transition-opacity duration-500";
-            notify.innerText = "Chiroyli hikmat nusxalandi! 📋";
-            document.body.appendChild(notify);
-            
-            setTimeout(() => {
-                notify.style.opacity = '0';
-                setTimeout(() => notify.remove(), 500);
-            }, 2000);
+            showToast("Hikmatdan muvaffaqiyatli nusxa olindi! 📋", "success");
         }
 
-        // Animatsiya sinflarini qo'shish
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in {
-                animation: fadeIn 0.4s ease-out forwards;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Boshlang'ich sozlamalarni o'rnatish
         window.onload = function() {
             updateProfile();
             setAddress('jigarim');
+
+            const savedProvider = localStorage.getItem("notiq_provider");
+            const savedKey = localStorage.getItem("notiq_key");
+
+            if (savedKey) {
+                aiConfig.provider = savedProvider || 'offline';
+                aiConfig.apiKey = savedKey;
+
+                document.getElementById("apiProviderSelect").value = aiConfig.provider;
+                document.getElementById("apiKeyInput").value = aiConfig.apiKey;
+                
+                updateUiForAiMode(true);
+            } else {
+                updateUiForAiMode(false);
+            }
         }
     </script>
 </body>
